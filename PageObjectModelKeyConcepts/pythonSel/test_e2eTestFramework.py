@@ -66,7 +66,7 @@ def test_e2elogin(browserInstance, test_list_item):
     shop_page = ShopPage(driver)
     loginPage.login(test_list_item["userEmail"], test_list_item["userPassword"])
     shop_page.handle_unexpected_alert()
-    shop_page.add_product_to_cart("Blackberry")
+    shop_page.add_product_to_cart(test_list_item["productName"])
     checkout_confirmation = shop_page.goToCart()
     checkout_confirmation.checkout()
     checkout_confirmation.enter_delivery_address("India")
