@@ -1,4 +1,5 @@
 import os
+import re
 
 import pytest
 from selenium import webdriver
@@ -26,7 +27,7 @@ def browserInstance(request):
     yield driver  #Before test function execution
     driver.close()  #post your test function execution
 
-
+#hook implematition is to capture failure scanrios
 @pytest.hookimpl( hookwrapper=True )
 def pytest_runtest_makereport(item):
     """
@@ -41,8 +42,16 @@ def pytest_runtest_makereport(item):
     if report.when == 'call' or report.when == "setup":
         xfail = hasattr( report, 'wasxfail' )
         if (report.skipped and xfail) or (report.failed and not xfail):
-            reports_dir = os.path.join( os.path.dirname( __file__ ), 'reports' )
-            file_name = os.path.join( reports_dir, report.nodeid.replace( "::", "_" ) + ".png" )
+            reports_dir = os.path.join(os.path.dirname( __file__ ), 'poornareports') #reports is a folder name
+
+            os.makedirs(reports_dir, exist_ok=True)
+
+            # Fix the mixed path separators issue
+            clean_nodeid = report.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_")
+            # Remove problematic characters
+            clean_nodeid = re.sub(r'[<>:"/\\|?*\[\]]', '_', clean_nodeid)
+            file_name = os.path.normpath(os.path.join(reports_dir, clean_nodeid + ".png"))
+            #file_name = os.path.join( reports_dir, report.nodeid.replace( "::", "_" ) + ".png" )
             print( "file name is " + file_name )
             _capture_screenshot( file_name )
             if file_name:
@@ -53,4 +62,9 @@ def pytest_runtest_makereport(item):
 
 
 def _capture_screenshot(file_name):
-    driver.get_screenshot_as_file(file_name)
+    try:
+        driver.get_screenshot_as_file(file_name)
+        print(f"Screenshot saved: {file_name}")
+    except Exception as e:
+        print(f"failed to capture the screen shot: {e}")
+

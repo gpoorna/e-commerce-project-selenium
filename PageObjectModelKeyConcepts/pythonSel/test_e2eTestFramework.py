@@ -62,6 +62,7 @@ with open(test_data_path) as f:
 def test_e2elogin(browserInstance, test_list_item):
     driver = browserInstance
     loginPage = LoginPage(driver)
+    print(loginPage.getTitle())
     loginPage.handle_unexpected_alert()
     shop_page = ShopPage(driver)
     loginPage.login(test_list_item["userEmail"], test_list_item["userPassword"])
@@ -71,6 +72,7 @@ def test_e2elogin(browserInstance, test_list_item):
     checkout_confirmation.checkout()
     checkout_confirmation.enter_delivery_address("India")
     checkout_confirmation.validate_order()
+
 
 
 

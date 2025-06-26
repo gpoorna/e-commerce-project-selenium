@@ -70,7 +70,7 @@ assert name in alertTextInfo
 alert.dismiss()'''
 
 #mouse hover action
-#Note:ActionChains is used to perform any new Ac   tions
+#Note:ActionChains is used to perform any new Actions
 #move_to_element is used to perform the mouse hover operation
 actions = ActionChains(driver)
 actions.move_to_element(driver.find_element(By.ID, "mousehover")).perform()
@@ -78,6 +78,7 @@ actions.move_to_element(driver.find_element(By.ID, "mousehover")).perform()
 actions.context_click(driver.find_element(By.LINK_TEXT, "Top")).click().perform()
 
 #Handle the frames
+
 
 
 
